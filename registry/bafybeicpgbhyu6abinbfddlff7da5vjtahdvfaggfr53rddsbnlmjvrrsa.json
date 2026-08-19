@@ -1,0 +1,6 @@
+{
+  "source_path": "/home/claude/ipfs-poc/waterpark_source/cmip6/healpix/cmip6/historical-r1i1p1f1/demo-model/P1M/level_5.zarr",
+  "ipfs_cid": "bafybeicpgbhyu6abinbfddlff7da5vjtahdvfaggfr53rddsbnlmjvrrsa",
+  "ingested": false,
+  "note": "CID computed via `ipfs add --only-hash`; no bytes were written to any IPFS blockstore and no network call was made."
+}
