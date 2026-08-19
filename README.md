@@ -1,10 +1,12 @@
+> ## 🚧 Work in Progress 🚧
+>
+> Needs more testing
+
 # CID-Based Access to Waterpark Zarr Data — Working Proof of Concept
 
-This is a real, runnable implementation of the flowchart from the earlier
-briefing: a STAC catalog whose items carry a precomputed IPFS CID, served
+This is a runnable implementation of the following concept: a STAC catalog whose items carry a precomputed IPFS CID, served
 through a pull-through gateway that ingests data into IPFS on first
-request. It runs against a **real local IPFS (Kubo) node** — nothing here
-is mocked at the IPFS layer.
+request. It runs against a **real local IPFS (Kubo) node**.
 
 ## What's real vs. what's stood in for
 
@@ -102,8 +104,8 @@ HTTP 404
 
 ## What this does *not* prove
 
-This PoC validates the mechanics — hashing, pull-through caching, integrity
-checking — on a single node. It does not validate, and a real deployment
+This PoC validates the mechanics: hashing, pull-through caching, integrity
+checking on a single node. It does not validate, and a real deployment
 would still need to work out:
 
 - **Real DHT propagation** to public IPFS peers (needs real network egress).
