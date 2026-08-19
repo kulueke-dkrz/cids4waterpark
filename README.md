@@ -13,7 +13,7 @@ request. It runs against a **real local IPFS (Kubo) node**.
 
 | Piece | Status |
 |---|---|
-| IPFS node (Kubo v0.33.2) | **Real binary, real daemon**, running locally |
+| IPFS node (Kubo) | **Real binary, real daemon**, running locally |
 | CID computation (`ipfs add --only-hash`) | **Real** — genuine CIDv1, no data written |
 | Zarr → IPFS ingestion (`ipfs add`) | **Real** — genuine merkleization, pinning |
 | Byte-for-byte / xarray round-trip | **Real** — verified below |
