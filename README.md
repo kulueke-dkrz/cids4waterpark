@@ -33,29 +33,24 @@ request. It runs against a **real local IPFS (Kubo) node**.
 ## Reproducing it
 
 ```bash
-# 1. Get a Kubo binary
-curl -sL -o kubo.tar.gz \
-  https://github.com/ipfs/kubo/releases/download/v0.33.2/kubo_v0.33.2_linux-amd64.tar.gz
-tar xzf kubo.tar.gz
+# 1. Get a Kubo binary from https://docs.ipfs.tech/install/command-line/#install-official-binary-distributions
 
-# 2. Init and start the node (offline mode — no public swarm route here)
-export IPFS_PATH=$PWD/.ipfs
-./kubo/ipfs init --profile=server
-./kubo/ipfs daemon --offline &
+# 2. Init and start the node
+ipfs init
+ipfs daemon
 
 # 3. Build the synthetic dataset and precompute its CID
-pip install --break-system-packages zarr numpy xarray fastapi uvicorn
-python3 make_dataset.py
-python3 precompute_cid.py        # -> registry/<cid>.json, registry_latest_cid.txt
-python3 add_stac_asset.py        # -> stac_item_with_cid.json
+python make_dataset.py
+python precompute_cid.py        # -> registry/<cid>.json, registry_latest_cid.txt
+python add_stac_asset.py        # -> stac_item_with_cid.json
 
 # 4. Start the gateway
-python3 -m uvicorn gateway:app --host 127.0.0.1 --port 9000 &
+python -m uvicorn gateway:app --host 127.0.0.1 --port 9000
 
 # 5. Request the CID
 CID=$(cat registry_latest_cid.txt)
-curl -s http://127.0.0.1:9000/ipfs/$CID | python3 -m json.tool   # cold: triggers ingestion
-curl -s http://127.0.0.1:9000/ipfs/$CID | python3 -m json.tool   # warm: served from cache
+curl -s http://127.0.0.1:9000/ipfs/$CID | python -m json.tool   # cold: triggers ingestion
+curl -s http://127.0.0.1:9000/ipfs/$CID | python -m json.tool   # warm: served from cache
 ```
 
 ## What was actually verified in this environment
@@ -63,7 +58,7 @@ curl -s http://127.0.0.1:9000/ipfs/$CID | python3 -m json.tool   # warm: served 
 **1. The CID is genuinely computed before anything is ingested.**
 ```
 $ ipfs add --only-hash -Q -r --cid-version=1 --raw-leaves ... level_5.zarr
-bafybeicpgbhyu6abinbfddlff7da5vjtahdvfaggfr53rddsbnlmjvrrsa
+e.g. bafybeicpgbhyu6abinbfddlff7da5vjtahdvfaggfr53rddsbnlmjvrrsa
 
 $ ipfs block stat bafybeicpg...
 Error: block was not found locally (offline)   <- confirmed: not ingested
