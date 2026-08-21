@@ -1,7 +1,6 @@
 > [!WARNING]
 > ## 🚧 Work in Progress 🚧
->
-> Needs more testing
+
 
 # CID-Based Access to Waterpark Zarr Data — Working Proof of Concept
 
@@ -33,7 +32,8 @@ request. It runs against a **real local IPFS (Kubo) node**.
 ## Reproducing it
 
 ```bash
-# 1. Get a Kubo binary from https://docs.ipfs.tech/install/command-line/#install-official-binary-distributions
+# 1. Get a Kubo binary
+https://docs.ipfs.tech/install/command-line/#install-official-binary-distributions
 
 # 2. Init and start the node
 ipfs init
@@ -121,7 +121,6 @@ This PoC validates the mechanics: hashing, pull-through caching, integrity
 checking on a single node. It does not validate, and a real deployment
 would still need to work out:
 
-- **Real DHT propagation** to public IPFS peers (needs real network egress).
 - **Scale**: this ran on a 2 MB toy dataset; petabyte-scale hashing
   throughput are unproven here.
 - **Versioning for growing simulations** not implemented
