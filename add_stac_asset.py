@@ -33,10 +33,6 @@ STAC_ITEM = {
             "title": "Stream Zarr Data",
             "roles": ["data"],
             "type": "application/vnd+zarr",
-            # In today's catalog this asset requires OAuth2 (see "requires"/
-            # "authentication" fields observed live). In the future state
-            # this briefing was asked about, waterpark data needs no auth,
-            # so that gate is simply absent here.
         },
         "local-access": {
             "href": "https://freva.dkrz.de/api/freva-nextgen/databrowser/data-search/freva/file?file=...level_5.zarr",

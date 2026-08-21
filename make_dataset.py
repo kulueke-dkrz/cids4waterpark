@@ -1,10 +1,6 @@
 """
 Creates a small synthetic Zarr store that stands in for a "waterpark" S3
-climate dataset (e.g. a CMIP6-style HEALPix monthly-mean variable),
-since the sandbox cannot reach the real s3.waterpark.dkrz.de endpoint.
-
-Structurally this mirrors a real item from the Freva STAC catalog:
-one Zarr group, a couple of data variables, chunked arrays.
+climate dataset (e.g. a CMIP6-style HEALPix monthly-mean variable)
 """
 import numpy as np
 import xarray as xr
