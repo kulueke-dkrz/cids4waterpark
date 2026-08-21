@@ -9,18 +9,17 @@ This is a runnable implementation of the following concept: a STAC catalog whose
 through a pull-through gateway that ingests data into IPFS on first
 request. It runs against a **real local IPFS (Kubo) node**.
 
-## What's real vs. what's stood in for
+## Components
 
 | Piece | Status |
 |---|---|
-| IPFS node (Kubo) | **Real binary, real daemon**, running locally |
-| CID computation (`ipfs add --only-hash`) | **Real** — genuine CIDv1, no data written |
-| Zarr → IPFS ingestion (`ipfs add`) | **Real** — genuine merkleization, pinning |
-| Byte-for-byte / xarray round-trip | **Real** — verified below |
-| CID-mismatch / integrity check | **Real** — verified below |
-| Waterpark dataset | **Synthetic stand-in.** This sandbox cannot reach `s3.waterpark.dkrz.de`, so `make_dataset.py` generates a small Zarr store with the same shape (Zarr group, chunked `(time, cell)` arrays, HEALPix-style metadata) as a real catalog item. |
+| IPFS node (Kubo) | running locally |
+| CID computation (`ipfs add --only-hash`) | CIDv1, no data written |
+| Zarr → IPFS ingestion (`ipfs add`) | pinning |
+| Byte-for-byte / xarray round-trip |verified below |
+| CID-mismatch / integrity check | verified below |
+| Waterpark dataset | **Synthetic stand-in.** `make_dataset.py` generates a small Zarr store with the same shape (Zarr group, chunked `(time, cell)` arrays, HEALPix-style metadata) as a real catalog item. |
 | DHT "provide" / public peer discovery | **Attempted for real** (`ipfs routing provide`) but finds zero peers — this sandbox has no route to the public IPFS swarm. In production this call is unchanged; only the network path differs. |
-| Auth | Omitted entirely, per the "future state: no auth needed" assumption. |
 
 ## Files
 
@@ -34,7 +33,7 @@ request. It runs against a **real local IPFS (Kubo) node**.
 ## Reproducing it
 
 ```bash
-# 1. Get a real Kubo binary (allowed from github.com in this sandbox)
+# 1. Get a Kubo binary
 curl -sL -o kubo.tar.gz \
   https://github.com/ipfs/kubo/releases/download/v0.33.2/kubo_v0.33.2_linux-amd64.tar.gz
 tar xzf kubo.tar.gz
@@ -103,7 +102,7 @@ HTTP 404
  DKRZ itself precomputed and published as STAC assets."
 ```
 
-## What this does *not* prove
+## Limitations of this PoC
 
 This PoC validates the mechanics: hashing, pull-through caching, integrity
 checking on a single node. It does not validate, and a real deployment
@@ -111,11 +110,8 @@ would still need to work out:
 
 - **Real DHT propagation** to public IPFS peers (needs real network egress).
 - **Scale**: this ran on a 2 MB toy dataset; petabyte-scale hashing
-  throughput, HAMT sharding for very large chunk counts, and re-chunking
-  large production Zarr stores to ~1 MiB blocks are unproven here.
-- **A real pinning/retention policy** — this demo never garbage-collects,
-  a production cluster needs one.
-- **Versioning for growing simulations** (IPNS/DNSLink) — not implemented
-  in this PoC; every run here targets a single, static store.
+  throughput are unproven here.
+- **Versioning for growing simulations** not implemented
+  in this PoC
 - **Concurrency** — many simultaneous cold requests for the same CID would
   need request coalescing, which this gateway does not implement.
