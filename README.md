@@ -24,7 +24,7 @@ request. It runs against a **real local IPFS (Kubo) node**.
 - `make_dataset.py` — builds the synthetic waterpark-style Zarr store.
 - `precompute_cid.py` — Step 1: `ipfs add --only-hash` to mint the CID without touching the blockstore. Writes `registry/<cid>.json`. Uses whatever `ipfs` is already on your `PATH` and whatever `IPFS_PATH`/repo you already have configured — it doesn't assume a bundled binary or a specific repo location. Override with the `IPFS_BIN` env var if `ipfs` isn't on `PATH`.
 - `gateway.py` — Steps 3–5: the FastAPI pull-through gateway. `GET /ipfs/{cid}` checks the local pin, and on a miss, fetches from the registry's source path, re-hashes, pins, and (attempts to) announce to the DHT. Every response — success or error — is guaranteed to be strict, standard JSON: no bare `Infinity`/`NaN` tokens, and unhandled exceptions are returned as JSON instead of FastAPI's default plain-text 500. The ingestion timeout defaults to 3600s and is configurable via `INGEST_TIMEOUT_SECONDS` for larger real datasets.
-- `add_stac_asset.py` — Step 2: adds an `ipfs-cid` asset to a STAC Item, in the same shape the real Freva catalog uses.
+- `add_stac_asset.py` — Step 2: adds an `ipfs-cid` asset to a STAC Item
 - `registry/` — the CID → source-path lookup table the gateway reads. `ingested`/`ingested_at` in each entry are bookkeeping only, updated by the gateway after a real ingestion — the gateway's actual "is this cached?" check is always the live `ipfs pin ls` call, never this file.
 - `stac_item_with_cid.json` — example output of Step 2.
 
