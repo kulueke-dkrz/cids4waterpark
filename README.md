@@ -47,8 +47,16 @@ python add_stac_asset.py        # -> stac_item_with_cid.json
 # 4. Start the gateway
 python -m uvicorn gateway:app --host 127.0.0.1 --port 9000
 
+
 # 5. Request the CID
 CID=$(cat registry_latest_cid.txt)
+
+# IMPORTANT: pins persist across runs in the same IPFS repo. If you've
+# requested this CID before (even in an earlier session), it's already
+# warm -- reset it first to see a genuine cold/warm pair:
+ipfs pin rm "$CID"
+ipfs repo gc
+
 curl -s http://127.0.0.1:9000/ipfs/$CID | python -m json.tool   # cold: triggers ingestion
 curl -s http://127.0.0.1:9000/ipfs/$CID | python -m json.tool   # warm: served from cache
 ```
@@ -58,7 +66,7 @@ curl -s http://127.0.0.1:9000/ipfs/$CID | python -m json.tool   # warm: served f
 **1. The CID is genuinely computed before anything is ingested.**
 ```
 $ ipfs add --only-hash -Q -r --cid-version=1 --raw-leaves ... level_5.zarr
-e.g. bafybeicpgbhyu6abinbfddlff7da5vjtahdvfaggfr53rddsbnlmjvrrsa
+bafybeicpgbhyu6abinbfddlff7da5vjtahdvfaggfr53rddsbnlmjvrrsa
 
 $ ipfs block stat bafybeicpg...
 Error: block was not found locally (offline)   <- confirmed: not ingested
@@ -97,6 +105,16 @@ HTTP 404
  DKRZ itself precomputed and published as STAC assets."
 ```
 
+**6. Ingestion output is parsed defensively.** `ipfs add` is run with
+`--progress=false` and only its last non-empty stdout line is trusted as
+the CID (rather than the whole captured blob), and a slow/large ingest
+that exceeds `INGEST_TIMEOUT_SECONDS` (default 3600s) returns a clean
+`504` instead of hanging or producing malformed output:
+```
+HTTP 504
+"Ingestion did not finish within 0s. For larger datasets, raise
+ INGEST_TIMEOUT_SECONDS."
+```
 ## Limitations of this PoC
 
 This PoC validates the mechanics: hashing, pull-through caching, integrity
