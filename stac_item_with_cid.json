@@ -43,7 +43,7 @@
       "type": "application/netcdf"
     },
     "ipfs-cid": {
-      "href": "ipfs://bafybeicpgbhyu6abinbfddlff7da5vjtahdvfaggfr53rddsbnlmjvrrsa",
+      "href": "ipfs://bafybeibyjkkvdakqnffkikb56uuwxhb3ztgt4zanltkxsedkak2holmddi",
       "title": "IPFS Content Identifier (on-demand)",
       "description": "Content-addressed reference for this Zarr store. The bytes are not necessarily resident on the public IPFS network yet: dereferencing this CID through the DKRZ gateway triggers on-demand ingestion from the source object store on first request. Subsequent requests are served from cache or peers.",
       "roles": [
@@ -52,7 +52,7 @@
       ],
       "type": "application/vnd+zarr",
       "alternate:name": "ipfs",
-      "gateway": "http://localhost:8080/ipfs/bafybeicpgbhyu6abinbfddlff7da5vjtahdvfaggfr53rddsbnlmjvrrsa"
+      "gateway": "http://localhost:8080/ipfs/bafybeibyjkkvdakqnffkikb56uuwxhb3ztgt4zanltkxsedkak2holmddi"
     }
   },
   "collection": "cmip6"

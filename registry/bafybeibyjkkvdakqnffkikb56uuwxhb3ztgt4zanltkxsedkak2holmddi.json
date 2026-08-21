@@ -1,0 +1,7 @@
+{
+  "source_path": "/Users/marco/Documents/cids4waterpark/waterpark_source/cmip6/healpix/cmip6/historical-r1i1p1f1/demo-model/P1M/level_5.zarr",
+  "ipfs_cid": "bafybeibyjkkvdakqnffkikb56uuwxhb3ztgt4zanltkxsedkak2holmddi",
+  "ingested": true,
+  "note": "CID computed via `ipfs add --only-hash`; no bytes were written to any IPFS blockstore and no network call was made.",
+  "ingested_at": "2026-08-21T13:16:29Z"
+}
