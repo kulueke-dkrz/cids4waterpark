@@ -2,7 +2,7 @@
 > ## 🚧 Work in Progress 🚧
 
 
-# CID-Based Access to Waterpark Zarr Data — Working Proof of Concept
+# Proof of Concept: CID-Based Access to Waterpark Zarr Data
 
 This is a runnable implementation of the following concept: a STAC catalog whose items carry a precomputed IPFS CID, served
 through a pull-through gateway that ingests data into IPFS on first
