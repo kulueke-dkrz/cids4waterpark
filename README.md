@@ -15,8 +15,7 @@ request. It runs against a **real local IPFS (Kubo) node**.
 | IPFS node (Kubo) | running locally |
 | CID computation (`ipfs add --only-hash`) | CIDv1, no data written |
 | Zarr → IPFS ingestion (`ipfs add`) | pinning |
-| Byte-for-byte / xarray round-trip |verified below |
-| CID-mismatch / integrity check | verified below |
+| CID-mismatch / integrity check | realized in `gateway.py` |
 | Waterpark dataset | **Synthetic stand-in.** `make_dataset.py` generates a small Zarr store with the same shape (Zarr group, chunked `(time, cell)` arrays, HEALPix-style metadata) as a real catalog item. |
 ## Files
 
@@ -77,17 +76,7 @@ Second GET /ipfs/<cid>  -> cache_hit_at_request_start: true,  ingest: null
 total_request_seconds dropped from 0.173s to 0.091s
 ```
 
-**3. Round-trip integrity: data pulled back out of IPFS is identical.**
-```
-$ ipfs get <cid> -o /tmp/retrieved
-$ diff -rq /tmp/retrieved  waterpark_source/.../level_5.zarr
-IDENTICAL: byte-for-byte match
-
->>> xr.open_zarr(original).identical(xr.open_zarr(retrieved_from_ipfs))
-True
-```
-
-**4. Source-drift protection.** After the CID was published, the underlying
+**3. Source-drift protection.** After the CID was published, the underlying
 file was modified (simulating an S3 object changing after its CID was
 minted). The gateway re-hashes on ingestion and refuses to serve it:
 ```
@@ -96,14 +85,14 @@ HTTP 409
  Source data has drifted since the CID was published — refusing to serve."
 ```
 
-**5. Unknown CIDs are rejected**, not resolved from the wider network:
+**4. Unknown CIDs are rejected**, not resolved from the wider network:
 ```
 HTTP 404
 "No registry entry for <cid>. This gateway only knows about CIDs that
  DKRZ itself precomputed and published as STAC assets."
 ```
 
-**6. Ingestion output is parsed defensively.** `ipfs add` is run with
+**5. Ingestion output is parsed defensively.** `ipfs add` is run with
 `--progress=false` and only its last non-empty stdout line is trusted as
 the CID (rather than the whole captured blob), and a slow/large ingest
 that exceeds `INGEST_TIMEOUT_SECONDS` (default 3600s) returns a clean
