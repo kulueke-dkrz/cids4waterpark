@@ -1,5 +1,5 @@
 """
-Step 3-5 of the proposal: the pull-through IPFS gateway.
+Step 3-4 of the proposal: the pull-through IPFS gateway.
 
   GET /ipfs/{cid}
     1. Check whether the CID is already pinned locally (warm cache).
