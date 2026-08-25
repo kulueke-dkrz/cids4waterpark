@@ -18,7 +18,6 @@ request. It runs against a **real local IPFS (Kubo) node**.
 | Byte-for-byte / xarray round-trip |verified below |
 | CID-mismatch / integrity check | verified below |
 | Waterpark dataset | **Synthetic stand-in.** `make_dataset.py` generates a small Zarr store with the same shape (Zarr group, chunked `(time, cell)` arrays, HEALPix-style metadata) as a real catalog item. |
-| DHT "provide" / public peer discovery | **Attempted for real** (`ipfs routing provide`) but finds zero peers — this sandbox has no route to the public IPFS swarm. In production this call is unchanged; only the network path differs. |
 ## Files
 
 - `make_dataset.py` — builds the synthetic waterpark-style Zarr store.
